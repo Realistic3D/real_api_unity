@@ -11,9 +11,19 @@ namespace REAL.Example
     [RequireComponent(typeof(RealAPI))]
     public class RendererExample : MonoBehaviour
     {
+        #region Inspector
+
         public RealAPI real;
         public Job[] jobs;
+
+        #endregion
+
+        #region Test Only
+
         public ApiResponse apiResponse;
+
+        #endregion
+        
         private void Awake()
         {
             jobs = Array.Empty<Job>();
@@ -27,7 +37,7 @@ namespace REAL.Example
             // RealSocket.Connect();
         }
         
-        public void Render()
+        public void RenderClick()
         {
             StartCoroutine(ApiClient.PostRequest(this, AskService.NewJob));
         }
@@ -40,17 +50,11 @@ namespace REAL.Example
             {
                 case "status":
                 case "auth_success":
-                    jobs = UpdateJobs(jobsData);
+                    jobs = JobTools.UpdateJobs(jobsData);
                     break;
             }
         }
 
-        private static Job[] UpdateJobs(Job[] jobList)
-        {
-            var newList = new List<Job>();
-            if(jobList == null) return newList.ToArray();
-            newList.AddRange(jobList.Where(jobItem => jobItem.expFrom == "u3d"));
-            return newList.ToArray();
-        }
+        
     }
 }

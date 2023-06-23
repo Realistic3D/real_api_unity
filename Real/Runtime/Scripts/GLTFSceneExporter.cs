@@ -371,15 +371,10 @@ namespace UnityGLTF
 		public MemoryStream GetGLB(string sceneName)
 		{
 			_shouldUseInternalBufferForImages = true;
-			// var glbFile = "D:/New folder/GLB TEST/Unity/input/HENRY.glb";
-			// Stream glbStream = new FileStream(glbFile, FileMode.Create);
-			// SaveGLBToStream(glbStream, sceneName);
 			var glbStream = new MemoryStream();
 			SaveGLBToStream(glbStream, sceneName, true);
 			glbStream.Position = 0;
 			return glbStream;
-			// return GetStreamBin(stream);
-			// return new byte[0];
 		}
 		public static byte[] SerializeToBytes<T>(T item)
 		{

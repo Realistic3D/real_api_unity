@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -11,24 +12,6 @@ namespace REAL.Example
     public static class ApiClient
     {
         private static readonly string URL = $"https://{RealNetwork.Domain}/rapi/ask_service";
-        private static void AddJsonToForm(Dictionary<string, object> jsonData, string parentKey, WWWForm form)
-        {
-            foreach (var kvp in jsonData)
-            {
-                var key = (string.IsNullOrEmpty(parentKey)) ? kvp.Key : parentKey + "." + kvp.Key;
-
-                if (kvp.Value is Dictionary<string, object> objects)
-                {
-                    AddJsonToForm(objects, key, form);
-                }
-                else
-                {
-                    var value = kvp.Value.ToString();
-                    form.AddField(key, value);
-                }
-            }
-        }
-        
         public static IEnumerator PostRequest(RendererExample render, AskService ask)
         {
             var param = new Params(render.real.login, ask);
@@ -45,7 +28,9 @@ namespace REAL.Example
             if (www.result == UnityWebRequest.Result.Success)
             {
                 var response = www.downloadHandler.text;
-                render.apiResponse = JsonUtility.FromJson<ApiResponse>(response);
+                var apiRes = JsonUtility.FromJson<ApiResponse>(response);
+                SendResponse(render, ask, apiRes);
+                
             }
             else
             {
@@ -54,6 +39,46 @@ namespace REAL.Example
             
             www.Dispose();
         }
+
+        public static IEnumerator PutRequest(LoginCred login, string url, byte[] scene)
+        {
+            var www = UnityWebRequest.Put(url, scene);
+            www.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log("Response: " + www.downloadHandler.text);
+            }
+            else
+            {
+                Debug.LogError("Error: " + www.error);
+            }
+        }
+        private static void SendResponse(RendererExample render, AskService ask, ApiResponse response)
+        {
+            render.apiResponse = response;
+            switch (ask)
+            {
+                case AskService.NewJob:
+                    JobTools.NewJob(render, response);
+                    break;
+                case AskService.Submit:
+                    // JobTools.Submit(render, response);
+                    break;
+                case AskService.Status:
+                    // JobTools.Status(render, response);
+                    break;
+                case AskService.Result:
+                    // JobTools.Result(render, response);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(ask), ask, null);
+            }
+      
+        }
+        
         public static IEnumerator PostRequestOld(LoginCred login, AskService ask)
         {
             var param = new Params(login, ask);
