@@ -10,13 +10,47 @@ namespace REAL.Example
 {
     public static class JobTools
     {
-        public static void NewJob(RendererExample render, ApiResponse response)
+        public static async void NewJob(RendererExample render)
         {
             var camera = Camera.main;
             var scene = SceneManager.GetActiveScene();
+            var login = render.real.login;
+            
             var realScene = Real.RealScene(scene, camera);
-            ApiClient.PutRequest(realScene);
-            Debug.LogError("SIZE = " + Real.SceneSize(realScene));
+            if (realScene == null)
+            {
+                Debug.LogError("Failed to create scene");
+                return;
+            }
+            
+            if (realScene.Length == 0)
+            {
+                Debug.LogError("Empty scene");
+                return;
+            }
+            
+            var apiResponse = await ApiRequests.PostRequest(login, AskService.NewJob);
+            render.apiResponse = apiResponse;
+
+            var uri = apiResponse.data.url;
+            if (uri == null || !uri.StartsWith("http"))
+            {
+                Debug.LogError("Failed to apply for new job");
+                return;
+            }
+            var uploaded = await ApiRequests.PutRequest(uri, realScene);
+            
+            if (!uploaded)
+            {
+                Debug.LogError("Failed to upload job");
+                return;
+            }
+            
+            Debug.Log("SUBMITTING");
+            
+            render.apiResponse = await ApiRequests.PostRequest(login, AskService.Submit);
+            
+            // Debug.LogError("SIZE = " + Real.SceneSize(realScene));
         }
         public static Job[] UpdateJobs(Job[] jobList)
         {

@@ -11,14 +11,13 @@ namespace REAL.Example
 {
     public static class ApiClient
     {
-        private static readonly string URL = $"https://{RealNetwork.Domain}/rapi/ask_service";
         public static IEnumerator PostRequest(RendererExample render, AskService ask)
         {
             var param = new Params(render.real.login, ask);
             var json = param.Dumps();
 
             var data = Encoding.UTF8.GetBytes(json);
-            var www = UnityWebRequest.Post(URL, "");
+            var www = UnityWebRequest.Post(RealNetwork.ApiPath, "");
             www.uploadHandler = new UploadHandlerRaw(data);
             www.downloadHandler = new DownloadHandlerBuffer();
             www.SetRequestHeader("Content-Type", "application/json");
@@ -28,9 +27,7 @@ namespace REAL.Example
             if (www.result == UnityWebRequest.Result.Success)
             {
                 var response = www.downloadHandler.text;
-                var apiRes = JsonUtility.FromJson<ApiResponse>(response);
-                SendResponse(render, ask, apiRes);
-                
+                Debug.Log("Response: " + response);
             }
             else
             {
@@ -56,28 +53,6 @@ namespace REAL.Example
                 Debug.LogError("Error: " + www.error);
             }
         }
-        private static void SendResponse(RendererExample render, AskService ask, ApiResponse response)
-        {
-            render.apiResponse = response;
-            switch (ask)
-            {
-                case AskService.NewJob:
-                    JobTools.NewJob(render, response);
-                    break;
-                case AskService.Submit:
-                    // JobTools.Submit(render, response);
-                    break;
-                case AskService.Status:
-                    // JobTools.Status(render, response);
-                    break;
-                case AskService.Result:
-                    // JobTools.Result(render, response);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(ask), ask, null);
-            }
-      
-        }
         
         public static IEnumerator PostRequestOld(LoginCred login, AskService ask)
         {
@@ -86,7 +61,7 @@ namespace REAL.Example
             
             var data = Encoding.UTF8.GetBytes(json);
             var header = new Hashtable { { "Content-Type", "application/json" } };
-            var www = new WWW (URL, data, header);
+            var www = new WWW (RealNetwork.ApiPath, data, header);
             yield return www;
             Debug.Log(www.text);
         }

@@ -39,7 +39,7 @@ namespace REAL.Example
         
         public void RenderClick()
         {
-            StartCoroutine(ApiClient.PostRequest(this, AskService.NewJob));
+            JobTools.NewJob(this);
         }
 
         public void OnMessage(SocketResponse response)
