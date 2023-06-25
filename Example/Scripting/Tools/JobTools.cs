@@ -30,9 +30,9 @@ namespace REAL.Example
             }
             
             var apiResponse = await ApiRequests.PostRequest(login, AskService.NewJob);
-            render.apiResponse = apiResponse;
+            var resData = apiResponse.data; 
 
-            var uri = apiResponse.data.url;
+            var uri = resData.url;
             if (uri == null || !uri.StartsWith("http"))
             {
                 Debug.LogError("Failed to apply for new job");
@@ -48,16 +48,16 @@ namespace REAL.Example
             
             Debug.Log("SUBMITTING");
             
-            render.apiResponse = await ApiRequests.PostRequest(login, AskService.Submit);
+            render.apiResponse = await ApiRequests.PostRequest(login, AskService.Submit, resData.jobID);
             
             // Debug.LogError("SIZE = " + Real.SceneSize(realScene));
         }
-        public static Job[] UpdateJobs(Job[] jobList)
-        {
-            var newList = new List<Job>();
-            if(jobList == null) return newList.ToArray();
-            newList.AddRange(jobList.Where(jobItem => jobItem.expFrom == "u3d"));
-            return newList.ToArray();
-        }
+        // public static Job[] GetJobs(Job[] jobList)
+        // {
+        //     var newList = new List<Job>();
+        //     if(jobList == null) return newList.ToArray();
+        //     newList.AddRange(jobList.Where(jobItem => jobItem.expFrom == "u3d"));
+        //     return newList.ToArray();
+        // }
     }
 }

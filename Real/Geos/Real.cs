@@ -21,14 +21,10 @@ namespace REAL
                 }
                 var gameObjects = scene.GetRootGameObjects();
                 var transforms = Array.ConvertAll(gameObjects, go => go.transform);
-                var options = new ExportOptions();
-                var exporter = new GLTFSceneExporter(transforms, options);
+                var exporter = new GLTFSceneExporter(transforms);
                 var sceneName = scene.name;
-                var stream = exporter.GetGLB(sceneName);
-                if (camera)
-                {
-                    camera.name = realName;
-                }
+                var stream = exporter.GetGlb(sceneName);
+                if (camera) camera.name = realName;
                 return stream.ToArray();
             }
             catch (Exception e)

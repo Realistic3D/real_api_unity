@@ -113,6 +113,11 @@ namespace REAL.Example
             _ws?.Abort();
         }
 
+        public static void Logout()
+        {
+            _ws?.Dispose();
+        }
+
         private static string GetUri(LoginCred login)
         {
             var ul = login.userCred;

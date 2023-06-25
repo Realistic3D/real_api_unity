@@ -292,23 +292,15 @@ namespace UnityGLTF
 		private static ProfilerMarker beforeMaterialExportMarker = new ProfilerMarker("Before Material Export (Callback)");
 		private static ProfilerMarker writeImageToDiskMarker = new ProfilerMarker("Export Image - Write to Disk");
 
-		/// <summary>
-		/// Create a GLTFExporter that exports out a transform
-		/// </summary>
-		/// <param name="rootTransforms">Root transform of object to export</param>
-		[Obsolete("Please switch to GLTFSceneExporter(Transform[] rootTransforms, ExportOptions options).  This constructor is deprecated and will be removed in a future release.")]
-		public GLTFSceneExporter(Transform[] rootTransforms, RetrieveTexturePathDelegate texturePathRetriever)
-			: this(rootTransforms, new ExportOptions { TexturePathRetriever = texturePathRetriever })
-		{
-		}
 
 		/// <summary>
 		/// Create a GLTFExporter that exports out a transform
 		/// </summary>
 		/// <param name="rootTransforms">Root transform of object to export</param>
-		public GLTFSceneExporter(Transform[] rootTransforms, ExportOptions options)
+		/// <param name="options">Config</param>
+		public GLTFSceneExporter(Transform[] rootTransforms, ExportOptions options = null)
 		{
-			_exportOptions = options;
+			_exportOptions = options ?? new ExportOptions();
 			_exportLayerMask = _exportOptions.ExportLayers;
 
 			var metalGlossChannelSwapShader = Resources.Load("MetalGlossChannelSwap", typeof(Shader)) as Shader;
@@ -368,11 +360,11 @@ namespace UnityGLTF
 		{
 			return _root;
 		}
-		public MemoryStream GetGLB(string sceneName)
+		public MemoryStream GetGlb(string sceneName)
 		{
 			_shouldUseInternalBufferForImages = true;
 			var glbStream = new MemoryStream();
-			SaveGLBToStream(glbStream, sceneName, true);
+			SaveGlbToStream(glbStream, sceneName);
 			glbStream.Position = 0;
 			return glbStream;
 		}
@@ -417,7 +409,8 @@ namespace UnityGLTF
 			// }
 			return bytes;
 		}
-		public void SaveGLBToStream(Stream stream, string sceneName, bool bin)
+
+		private void SaveGlbToStream(Stream stream, string sceneName)
 		{
 			exportGltfMarker.Begin();
 
@@ -623,7 +616,7 @@ namespace UnityGLTF
 		/// <param name="output">Stream to copy to.</param>
 		private static void CopyStream(Stream input, BinaryWriter output)
 		{
-			byte[] buffer = new byte[8 * 1024];
+			var buffer = new byte[8 * 1024];
 			int length;
 			while ((length = input.Read(buffer, 0, buffer.Length)) > 0)
 			{
@@ -926,7 +919,7 @@ namespace UnityGLTF
 				{
 					var firstRoot = rootObjTransforms[0];
 					var newRoots = new Transform[firstRoot.childCount];
-					for (int i = 0; i < firstRoot.childCount; i++)
+					for (var i = 0; i < firstRoot.childCount; i++)
 						newRoots[i] = firstRoot.GetChild(i);
 					rootObjTransforms = newRoots;
 				}

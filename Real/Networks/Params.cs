@@ -13,13 +13,15 @@ namespace REAL.Networks
     {
         public string ask;
         public ProdCred prodCred;
+        public ServiceParams service;
         public RenderParams renderParams;
 
-        public Params(LoginCred login, AskService askService)
+        public Params(LoginCred login, AskService askService, string jobID = null)
         {
             ask = Ask(askService);
             prodCred = new ProdCred(login);
-            renderParams = new RenderParams();
+            if(askService == AskService.NewJob) renderParams = new RenderParams();
+            else service = new ServiceParams(jobID);
         }
 
         public string Dumps()
@@ -54,6 +56,21 @@ namespace REAL.Networks
             appKey = login.userCred.appKey;
             prodKey = login.prodCred.prodKey;
         }
+        public string Dumps()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
+    }
+    [Serializable]
+    public class ServiceParams
+    {
+        public string jobID;
+
+        public ServiceParams(string jobID)
+        {
+            this.jobID = jobID;
+        }
+        
         public string Dumps()
         {
             return JsonConvert.SerializeObject(this);

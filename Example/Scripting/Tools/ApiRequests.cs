@@ -10,9 +10,9 @@ using UnityEngine.Networking;
 
 public static class ApiRequests
 {
-    public static async Task<ApiResponse> PostRequest(LoginCred login, AskService ask)
+    public static async Task<ApiResponse> PostRequest(LoginCred login, AskService ask, string jobID = null)
     {
-        var param = new Params(login, ask);
+        var param = new Params(login, ask, jobID);
         var json = param.Dumps();
 
         var data = Encoding.UTF8.GetBytes(json);
@@ -31,7 +31,11 @@ public static class ApiRequests
         if (www.result == UnityWebRequest.Result.Success)
         {
             var response = www.downloadHandler.text;
-            Debug.Log(response);
+            if(ask != AskService.NewJob)
+            {
+                Debug.LogError(json);
+                Debug.Log(response);
+            }
             return JsonUtility.FromJson<ApiResponse>(response);
         }
         Debug.LogError("Error: " + www.error);

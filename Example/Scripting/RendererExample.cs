@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using REAL.Items;
 using REAL.Networks;
 using UnityEngine;
 
@@ -14,7 +13,7 @@ namespace REAL.Example
         #region Inspector
 
         public RealAPI real;
-        public Job[] jobs;
+        public UITools canvas;
 
         #endregion
 
@@ -26,35 +25,28 @@ namespace REAL.Example
         
         private void Awake()
         {
-            jobs = Array.Empty<Job>();
             real = GetComponent<RealAPI>();
             if (!real) throw new Exception("API Instance is missing");
             RealSocket.RendererExample = this;
         }
-
-        public void Start()
-        {
-            // RealSocket.Connect();
-        }
         
         public void RenderClick()
         {
+            print("Exporting....");
             JobTools.NewJob(this);
         }
-
         public void OnMessage(SocketResponse response)
         {
-            var jobsData = response.data;
             var type = response.type;
+            var jobsData = response.data;
             switch (type)
             {
                 case "status":
                 case "auth_success":
-                    jobs = JobTools.UpdateJobs(jobsData);
+                    canvas.loginPanel.SetStatus("Online");
+                    canvas.jobPanel.AddJobs(jobsData);
                     break;
             }
         }
-
-        
     }
 }

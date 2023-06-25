@@ -271,6 +271,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   real: {fileID: 0}
   jobs: []
+  apiResponse:
+    msg: 
+    data:
+      url: 
+      jobID: 
+      status: 
 --- !u!114 &744742014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -702,7 +708,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 744742013}
         m_TargetAssemblyTypeName: REAL.Example.RendererExample, Assembly-CSharp
-        m_MethodName: Render
+        m_MethodName: RenderClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
