@@ -34,16 +34,15 @@ namespace REAL.Example
                     break;
             }
         }
-        private void LoginClick()
+        private static void LoginClick()
         {
-            status.text = "Connecting....";
+            Commons.Renderer.canvas.infoPanel.SetStatus("Connecting....");
             RealSocket.Connect();
         }
-        private void LogoutClick()
+        private static void LogoutClick()
         {
-            status.text = "Closing....";
+            Commons.Renderer.canvas.infoPanel.SetStatus("Closing....");
             RealSocket.Logout();
-            SetStatus("Offline");
         }
 
         private void EnableButtons(bool loggedIn = true)

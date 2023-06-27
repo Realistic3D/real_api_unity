@@ -5,6 +5,7 @@ using System.Linq;
 using REAL.Items;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace REAL.Example
 {
@@ -12,6 +13,7 @@ namespace REAL.Example
     {
         #region Inspector
 
+        public Image jobPreview;
         public GameObject jobPrefab;
         public Transform resultArea;
         public List<JobItem> jobs;

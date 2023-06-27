@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using REAL.Networks;
 using UnityEngine;
 
@@ -27,13 +24,7 @@ namespace REAL.Example
         {
             real = GetComponent<RealAPI>();
             if (!real) throw new Exception("API Instance is missing");
-            RealSocket.RendererExample = this;
-        }
-        
-        public void RenderClick()
-        {
-            print("Exporting....");
-            JobTools.NewJob(this);
+            Commons.Renderer = this;
         }
         public void OnMessage(SocketResponse response)
         {
@@ -42,11 +33,26 @@ namespace REAL.Example
             switch (type)
             {
                 case "status":
+                    canvas.jobPanel.AddJobs(jobsData);
+                    break;
                 case "auth_success":
-                    canvas.loginPanel.SetStatus("Online");
+                    OnOnline();
                     canvas.jobPanel.AddJobs(jobsData);
                     break;
             }
+        }
+
+        private void OnOnline()
+        {
+            canvas.infoPanel.SetStatus("Connected!");
+            canvas.loginPanel.SetStatus("Online");
+            canvas.ShowRenderUI(true);
+        }
+        public void OnOffline()
+        {
+            canvas.infoPanel.SetStatus("Logged out!");
+            canvas.loginPanel.SetStatus("Offline");
+            canvas.ShowRenderUI(false);
         }
     }
 }

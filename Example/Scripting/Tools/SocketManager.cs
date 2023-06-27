@@ -24,7 +24,6 @@ namespace REAL.Example
         
         // public static bool IsConnected;
 
-        public static RendererExample RendererExample;
         public static bool IsOpen
         {
             get
@@ -52,7 +51,7 @@ namespace REAL.Example
             try
             {
                 if (_ws is { State: WebSocketState.Connecting or WebSocketState.Open }) return;
-                _url = GetUri(RendererExample.real.login);
+                _url = GetUri(Commons.Renderer.real.login);
 
                 _ws = new ClientWebSocket();
                 _ct = new CancellationToken();
@@ -86,23 +85,17 @@ namespace REAL.Example
                     var bytes = receiveList.ToArray();
                     var response = Encoding.UTF8.GetString(bytes);
                     var sockResponse = JsonUtility.FromJson<SocketResponse>(response);
-                    RendererExample.OnMessage(sockResponse);
+                    Commons.Renderer.OnMessage(sockResponse);
                 }
             }
             catch (Exception ex)
             {
                 Debug.LogError(ex);
-                // Debug.LogErrorFormat("[WebSocket] {0}\nCloseStatus: {1}\nCloseStatusDescription: {2}", ex.Message, _ws.CloseStatus, _ws.CloseStatusDescription);
-                // _onConnectError?.Invoke();
-                // Connected = false;
-                // RealServices.UpdateService("-1");
             }
             finally
             {
                 _ws?.Dispose();
                 _ws = null;
-                // Connected = false;
-                // RealServices.UpdateService("-1");
                 Debug.LogError("Connection closed due to error!");
             }
         }
@@ -116,6 +109,7 @@ namespace REAL.Example
         public static void Logout()
         {
             _ws?.Dispose();
+            Commons.Renderer.OnOffline();
         }
 
         private static string GetUri(LoginCred login)

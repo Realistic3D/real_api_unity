@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,54 +11,95 @@ namespace REAL.Example
 {
     public static class JobTools
     {
-        public static async void NewJob(RendererExample render)
+        public static async void NewJob()
         {
+
+            #region Step 1: Get Scene
+
             var camera = Camera.main;
             var scene = SceneManager.GetActiveScene();
-            var login = render.real.login;
+            var login = Commons.Renderer.real.login;
             
             var realScene = Real.RealScene(scene, camera);
+            
+            #endregion
+            
+            #region Optional checks
+
             if (realScene == null)
             {
-                Debug.LogError("Failed to create scene");
+                Commons.Renderer.canvas.loginPanel.SetStatus("Failed to create scene!");
                 return;
             }
             
             if (realScene.Length == 0)
             {
-                Debug.LogError("Empty scene");
+                Commons.Renderer.canvas.loginPanel.SetStatus("Empty scene!");
                 return;
             }
+
+            #endregion
+            
+            #region Step 2: Apply new job
             
             var apiResponse = await ApiRequests.PostRequest(login, AskService.NewJob);
             var resData = apiResponse.data; 
 
             var uri = resData.url;
+            
+            #endregion
+            
+            #region Optional checks
+            
             if (uri == null || !uri.StartsWith("http"))
             {
-                Debug.LogError("Failed to apply for new job");
+                Commons.Renderer.canvas.loginPanel.SetStatus("Failed to apply for new job!");
                 return;
             }
+            
+            #endregion
+            
+            #region Step 3: Upload scene
+
             var uploaded = await ApiRequests.PutRequest(uri, realScene);
+            
+            #endregion
+            
+            #region Optional checks
             
             if (!uploaded)
             {
-                Debug.LogError("Failed to upload job");
+                Commons.Renderer.canvas.loginPanel.SetStatus("Failed to upload job!");
                 return;
             }
+            Commons.Renderer.canvas.loginPanel.SetStatus("Submitting job!");
             
-            Debug.Log("SUBMITTING");
+            #endregion
             
-            render.apiResponse = await ApiRequests.PostRequest(login, AskService.Submit, resData.jobID);
-            
+            #region Step 4: Submit job
+
+            Commons.Renderer.apiResponse = await ApiRequests.PostRequest(login, AskService.Submit, resData.jobID);
             // Debug.LogError("SIZE = " + Real.SceneSize(realScene));
+            #endregion
         }
-        // public static Job[] GetJobs(Job[] jobList)
-        // {
-        //     var newList = new List<Job>();
-        //     if(jobList == null) return newList.ToArray();
-        //     newList.AddRange(jobList.Where(jobItem => jobItem.expFrom == "u3d"));
-        //     return newList.ToArray();
-        // }
+
+        public static async void DownloadResult(Job job, Action<float> progressCallback)
+        {
+            var login = Commons.Renderer.real.login;
+            var apiResponse = await ApiRequests.PostRequest(login, AskService.Result, job.jobID);
+            var data = apiResponse.data;
+            
+            if (data == null || !data.url.StartsWith("http"))
+            {
+                Commons.Renderer.canvas.loginPanel.SetStatus("Failed to apply for result!");
+                return;
+            }
+
+            var url = data.url;
+            var sprite = await ApiRequests.DownloadImageProgress(url, progressCallback);
+            Commons.Renderer.canvas.jobPanel.jobPreview.sprite = sprite;
+            Commons.Renderer.canvas.uiPanel.ActivateView(true);
+        }
+        
     }
 }

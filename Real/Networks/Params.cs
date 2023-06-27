@@ -26,8 +26,15 @@ namespace REAL.Networks
 
         public string Dumps()
         {
-            var json = JsonConvert.SerializeObject(this);
-            json = json.Replace('"', '\"');
+            // var json = JsonConvert.SerializeObject(this);
+            // json = json.Replace('"', '\"');
+            // return json;
+            var settings = new JsonSerializerSettings
+            {
+                StringEscapeHandling = StringEscapeHandling.EscapeHtml,
+                NullValueHandling = NullValueHandling.Ignore // Exclude null properties
+            };
+            var json = JsonConvert.SerializeObject(this, settings);
             return json;
         }
 
@@ -38,7 +45,7 @@ namespace REAL.Networks
                 AskService.NewJob => "new_job",
                 AskService.Submit => "submit",
                 AskService.Status => "status",
-                AskService.Result => "status",
+                AskService.Result => "result",
                 _ => throw new Exception("Need service")
             };
         }

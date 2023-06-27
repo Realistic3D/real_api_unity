@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -27,15 +28,16 @@ public static class ApiRequests
         {
             await Task.Yield();
         }
-
+        
+        // if(ask == AskService.Result)
+        // {
+        //     Debug.LogError(json);
+        //     // Debug.Log(response);
+        // }
         if (www.result == UnityWebRequest.Result.Success)
         {
             var response = www.downloadHandler.text;
-            if(ask != AskService.NewJob)
-            {
-                Debug.LogError(json);
-                Debug.Log(response);
-            }
+            
             return JsonUtility.FromJson<ApiResponse>(response);
         }
         Debug.LogError("Error: " + www.error);
@@ -55,5 +57,40 @@ public static class ApiRequests
             await Task.Yield();
         }
         return www.result == UnityWebRequest.Result.Success;
+    }
+    
+    public static async Task<Sprite> DownloadImage(string url)
+    {
+        using var www = UnityWebRequestTexture.GetTexture(url);
+        var asyncOperation = www.SendWebRequest();
+        
+        while (!asyncOperation.isDone)
+        {
+            await Task.Yield();
+        }
+
+        if (www.result != UnityWebRequest.Result.Success) return null;
+        var texture = DownloadHandlerTexture.GetContent(www);
+        var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+        return sprite;
+    }
+    
+    public static async Task<Sprite> DownloadImageProgress(string url, Action<float> progressCallback)
+    {
+        using var www = UnityWebRequestTexture.GetTexture(url);
+        var asyncOperation = www.SendWebRequest();
+        
+        while (!asyncOperation.isDone)
+        {
+            var progress = Mathf.Clamp01(www.downloadProgress);
+            var round = (float) Math.Round(progress * 100f, 3);
+            progressCallback?.Invoke(round);
+            await Task.Yield();
+        }
+
+        if (www.result != UnityWebRequest.Result.Success) return null;
+        var texture = DownloadHandlerTexture.GetContent(www);
+        var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+        return sprite;
     }
 }

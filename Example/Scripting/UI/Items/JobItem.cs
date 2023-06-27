@@ -27,13 +27,14 @@ namespace REAL.Example
         private void Awake()
         {
             _thumbButton = thumb.GetComponent<Button>();
-            _thumbButton.onClick.AddListener(OnClicked);
+            _thumbButton.onClick.AddListener(ResultClicked);
             _thumbButton.interactable = false;
         }
         
-        private void OnClicked()
+        private async void ResultClicked()
         {
             print("Clicked");
+            JobTools.DownloadResult(job, DownloadProgress);
         }
         
         public void SaveStatus(Job jobInfo)
@@ -52,17 +53,10 @@ namespace REAL.Example
                     break;
             }
         }
-        
-        // public void SaveResult(string imName, Sprite image)
-        // {
-        //     downloaded = true;
-        //     imgName = imName;
-        //     thumb.sprite = image;
-        //     status.text = "Finished";
-        //     button.interactable = true;
-        //     jobID = -1;
-        // }
-        
-        
+
+        private static void DownloadProgress(float progress)
+        {
+            Commons.Renderer.canvas.lbPanel.SetStatus(progress);
+        }
     } 
 }
