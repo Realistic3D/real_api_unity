@@ -41,7 +41,6 @@ namespace REAL.Example
         }
         private static void LogoutClick()
         {
-            Commons.Renderer.canvas.infoPanel.SetStatus("Closing....");
             RealSocket.Logout();
         }
 

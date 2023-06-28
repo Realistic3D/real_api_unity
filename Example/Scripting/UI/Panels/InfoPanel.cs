@@ -10,6 +10,7 @@ namespace REAL.Example
 
         public void SetStatus(string info)
         {
+            if(!infoPref) return;
             Instantiate(infoPref, transform).GetComponent<InfoUI>().SetInfo(info);
         }
     }

@@ -13,7 +13,6 @@ namespace REAL.Example
     {
         #region Inspector
 
-        public Image jobPreview;
         public GameObject jobPrefab;
         public Transform resultArea;
         public List<JobItem> jobs;
@@ -28,13 +27,36 @@ namespace REAL.Example
 
         #endregion
 
+        private void Awake()
+        {
+            DisplayResult();
+        }
+
+        #region Result UI
+
+        public void DisplayResult(Sprite result=null)
+        {
+            var show = (bool) result;
+            var uiPanel = Commons.Renderer.canvas.uiPanel;
+            var loginPanel = Commons.Renderer.canvas.loginPanel;
+            
+            uiPanel.jobPreview.sprite = result;
+
+            uiPanel.ActivateView(show);
+            uiPanel.jobPreview.gameObject.SetActive(show);
+            loginPanel.gameObject.SetActive(!show);
+            resultArea.transform.parent.gameObject.SetActive(!show);
+        }
+
+        #endregion
+
+        #region Job List
+
         public void AddJobs(Job[] jobList)
         {
-            jobs.Clear();
             if(jobList == null || jobList.Length == 0) return;
             foreach (var job in jobList) AddJob(job);
         }
-        
         private void AddJob(Job job)
         {
             var updated = UpdateJob(job);
@@ -51,7 +73,6 @@ namespace REAL.Example
             jobs.Add(resultItem);
             UpdateRect();
         }
-
         private bool UpdateJob(Job job)
         {
             var count = jobs.Count;
@@ -66,6 +87,8 @@ namespace REAL.Example
             return false;
         }
 
+        #endregion
+        
         #region Canvas Adjustment
 
         private void UpdateRect()

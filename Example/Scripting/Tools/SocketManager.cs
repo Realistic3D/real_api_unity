@@ -56,7 +56,7 @@ namespace REAL.Example
                 _ws = new ClientWebSocket();
                 _ct = new CancellationToken();
                 
-                Debug.LogFormat("[WebSocket] start connection {0}", _url);
+                // Debug.LogFormat("[WebSocket] start connection {0}", _url);
                 
                 var uri = new Uri(_url);
                 await _ws.ConnectAsync(uri, _ct);
@@ -90,13 +90,14 @@ namespace REAL.Example
             }
             catch (Exception ex)
             {
-                Debug.LogError(ex);
+                // Debug.LogError(ex);
+                if(!Application.isPlaying) return;
+                Commons.Renderer.canvas.infoPanel.SetStatus("Socket closed!");
             }
             finally
             {
                 _ws?.Dispose();
                 _ws = null;
-                Debug.LogError("Connection closed due to error!");
             }
         }
         

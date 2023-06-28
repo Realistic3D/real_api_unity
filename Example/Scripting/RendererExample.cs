@@ -1,4 +1,5 @@
 using System;
+using REAL.Items;
 using REAL.Networks;
 using UnityEngine;
 
@@ -41,7 +42,6 @@ namespace REAL.Example
                     break;
             }
         }
-
         private void OnOnline()
         {
             canvas.infoPanel.SetStatus("Connected!");
@@ -50,9 +50,13 @@ namespace REAL.Example
         }
         public void OnOffline()
         {
-            canvas.infoPanel.SetStatus("Logged out!");
             canvas.loginPanel.SetStatus("Offline");
             canvas.ShowRenderUI(false);
+        }
+
+        private void OnApplicationQuit()
+        {
+            RealSocket.Abort();
         }
     }
 }

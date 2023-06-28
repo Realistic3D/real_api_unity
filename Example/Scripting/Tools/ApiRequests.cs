@@ -28,12 +28,7 @@ public static class ApiRequests
         {
             await Task.Yield();
         }
-        
-        // if(ask == AskService.Result)
-        // {
-        //     Debug.LogError(json);
-        //     // Debug.Log(response);
-        // }
+
         if (www.result == UnityWebRequest.Result.Success)
         {
             var response = www.downloadHandler.text;

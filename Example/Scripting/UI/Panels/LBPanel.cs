@@ -5,7 +5,7 @@ using UnityEngine;
 public class LBPanel : MonoBehaviour
 {
     public GameObject lbPref;
-    public AnimateImage _image;
+    private AnimateImage _image;
     public void SetStatus(float progress)
     {
         if (!_image)

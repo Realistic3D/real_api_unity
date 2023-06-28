@@ -31,9 +31,8 @@ namespace REAL.Example
             _thumbButton.interactable = false;
         }
         
-        private async void ResultClicked()
+        private void ResultClicked()
         {
-            print("Clicked");
             JobTools.DownloadResult(job, DownloadProgress);
         }
         

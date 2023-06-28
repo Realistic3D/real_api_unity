@@ -28,13 +28,13 @@ namespace REAL.Example
 
             if (realScene == null)
             {
-                Commons.Renderer.canvas.loginPanel.SetStatus("Failed to create scene!");
+                Commons.Renderer.canvas.infoPanel.SetStatus("Failed to create scene!");
                 return;
             }
             
             if (realScene.Length == 0)
             {
-                Commons.Renderer.canvas.loginPanel.SetStatus("Empty scene!");
+                Commons.Renderer.canvas.infoPanel.SetStatus("Empty scene!");
                 return;
             }
 
@@ -44,7 +44,6 @@ namespace REAL.Example
             
             var apiResponse = await ApiRequests.PostRequest(login, AskService.NewJob);
             var resData = apiResponse.data; 
-
             var uri = resData.url;
             
             #endregion
@@ -53,7 +52,7 @@ namespace REAL.Example
             
             if (uri == null || !uri.StartsWith("http"))
             {
-                Commons.Renderer.canvas.loginPanel.SetStatus("Failed to apply for new job!");
+                Commons.Renderer.canvas.infoPanel.SetStatus("Failed to apply for new job!");
                 return;
             }
             
@@ -69,10 +68,10 @@ namespace REAL.Example
             
             if (!uploaded)
             {
-                Commons.Renderer.canvas.loginPanel.SetStatus("Failed to upload job!");
+                Commons.Renderer.canvas.infoPanel.SetStatus("Failed to upload job!");
                 return;
             }
-            Commons.Renderer.canvas.loginPanel.SetStatus("Submitting job!");
+            Commons.Renderer.canvas.infoPanel.SetStatus("Submitting job!");
             
             #endregion
             
@@ -97,8 +96,7 @@ namespace REAL.Example
 
             var url = data.url;
             var sprite = await ApiRequests.DownloadImageProgress(url, progressCallback);
-            Commons.Renderer.canvas.jobPanel.jobPreview.sprite = sprite;
-            Commons.Renderer.canvas.uiPanel.ActivateView(true);
+            Commons.Renderer.canvas.jobPanel.DisplayResult(sprite);
         }
         
     }

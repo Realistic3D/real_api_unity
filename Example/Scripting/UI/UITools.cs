@@ -24,6 +24,7 @@ namespace REAL.Example
         public void ShowRenderUI(bool show)
         {
             uiPanel.gameObject.SetActive(show);
+            jobPanel.gameObject.SetActive(show);
         }
     }
 }
