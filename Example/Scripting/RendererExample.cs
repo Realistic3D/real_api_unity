@@ -8,12 +8,10 @@ namespace REAL.Example
     [RequireComponent(typeof(RealAPI))]
     public class RendererExample : MonoBehaviour
     {
-        #region Inspector
-
+        [HideInInspector]
         public RealAPI real;
-        public UITools canvas;
 
-        #endregion
+        public UICanvas canvas;
         
         private void Awake()
         {

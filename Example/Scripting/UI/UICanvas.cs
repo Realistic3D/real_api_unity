@@ -1,11 +1,8 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace REAL.Example
 {
-    public class UITools : MonoBehaviour
+    public class UICanvas : MonoBehaviour
     {
         #region Panels
         
@@ -19,6 +16,9 @@ namespace REAL.Example
 
         private void Awake()
         {
+            lbPanel.gameObject.SetActive(true);
+            infoPanel.gameObject.SetActive(true);
+            loginPanel.gameObject.SetActive(true);
             ShowRenderUI(false);
         }
         public void ShowRenderUI(bool show)

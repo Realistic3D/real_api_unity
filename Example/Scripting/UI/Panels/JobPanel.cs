@@ -27,7 +27,7 @@ namespace REAL.Example
 
         #endregion
 
-        private void Awake()
+        private void Start()
         {
             DisplayResult();
         }
