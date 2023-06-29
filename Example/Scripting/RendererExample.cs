@@ -14,12 +14,6 @@ namespace REAL.Example
         public UITools canvas;
 
         #endregion
-
-        #region Test Only
-
-        public ApiResponse apiResponse;
-
-        #endregion
         
         private void Awake()
         {

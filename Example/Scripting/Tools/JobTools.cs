@@ -77,7 +77,7 @@ namespace REAL.Example
             
             #region Step 4: Submit job
 
-            Commons.Renderer.apiResponse = await ApiRequests.PostRequest(login, AskService.Submit, resData.jobID);
+            await ApiRequests.PostRequest(login, AskService.Submit, resData.jobID);
             // Debug.LogError("SIZE = " + Real.SceneSize(realScene));
             #endregion
         }
