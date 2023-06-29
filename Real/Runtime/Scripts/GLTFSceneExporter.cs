@@ -1126,6 +1126,7 @@ namespace UnityGLTF
 	        DeclareExtensionUsage(KHR_lights_punctualExtensionFactory.EXTENSION_NAME, false);
 
             GLTFLight light;
+            const float fact = 10f;
 
             if (unityLight.type == LightType.Spot)
             {
@@ -1136,7 +1137,7 @@ namespace UnityGLTF
                 light.type = unityLight.type.ToString().ToLower();
                 light.color = new GLTF.Math.Color(unityLight.color.r, unityLight.color.g, unityLight.color.b, 1);
                 light.range = unityLight.range;
-                light.intensity = unityLight.intensity * Mathf.PI;
+                light.intensity = unityLight.intensity;
             }
             else if (unityLight.type == LightType.Directional)
             {
@@ -1146,7 +1147,7 @@ namespace UnityGLTF
 
                 light.type = unityLight.type.ToString().ToLower();
                 light.color = new GLTF.Math.Color(unityLight.color.r, unityLight.color.g, unityLight.color.b, 1);
-                light.intensity = unityLight.intensity * Mathf.PI;
+                light.intensity = unityLight.intensity;
             }
             else if (unityLight.type == LightType.Point)
             {
@@ -1157,7 +1158,7 @@ namespace UnityGLTF
                 light.type = unityLight.type.ToString().ToLower();
                 light.color = new GLTF.Math.Color(unityLight.color.r, unityLight.color.g, unityLight.color.b, 1);
                 light.range = unityLight.range;
-                light.intensity = unityLight.intensity * Mathf.PI;
+                light.intensity = unityLight.intensity;
             }
             else
             {

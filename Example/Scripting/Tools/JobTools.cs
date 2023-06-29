@@ -43,6 +43,7 @@ namespace REAL.Example
             #region Step 2: Apply new job
             
             var apiResponse = await ApiRequests.PostRequest(login, AskService.NewJob);
+            Debug.Log(apiResponse);
             var resData = apiResponse.data; 
             var uri = resData.url;
             
