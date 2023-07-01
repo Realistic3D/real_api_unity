@@ -11,6 +11,37 @@ using UnityEngine.Networking;
 
 public static class ApiRequests
 {
+    public static async Task<AccountResponse> GetAccount(LoginCred login)
+    {
+        const string domain = RealNetwork.Domain;
+        var insID = login.insID;
+        var appKey = login.appKey;
+        var prodKey = login.prodKey;
+        
+        var uri = $"https://{domain}/rapi/get_account?insID={insID}&appKey={appKey}&prodKey={prodKey}";
+        
+        var www = UnityWebRequest.Get(uri);
+        www.downloadHandler = new DownloadHandlerBuffer();
+        
+        var asyncOperation = www.SendWebRequest();
+        
+        while (!asyncOperation.isDone)
+        {
+            await Task.Yield();
+        }
+        
+        if (www.result == UnityWebRequest.Result.Success)
+        {
+            var response = www.downloadHandler.text;
+            
+            return JsonUtility.FromJson<AccountResponse>(response);
+        }
+        
+        Debug.LogError("Error: " + www.error);
+        www.Dispose();
+        return null;
+    }
+    
     public static async Task<ApiResponse> PostRequest(LoginCred login, AskService ask, string jobID = null)
     {
         var param = new Params(login, ask, jobID);

@@ -115,10 +115,12 @@ namespace REAL.Example
 
         private static string GetUri(LoginCred login)
         {
-            var ul = login.userCred;
-            var pl = login.prodCred;
-            return $"wss://{(RealNetwork.Domain)}/login?user_name={ul.userName}&app_key={ul.appKey}" +
-                   $"&app_secret={ul.appSecret}&prod_key={pl.prodKey}&ins_id={pl.insID}";
+            // var ul = login.userCred;
+            // var pl = login.prodCred;
+            var insID = login.insID;
+            var appKey = login.appKey;
+            var prodKey = login.prodKey;
+            return $"wss://{(RealNetwork.Domain)}/login?app_key={appKey}&prod_key={prodKey}&ins_id={insID}&exp_from=u3d";
         }
     }
 

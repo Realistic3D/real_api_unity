@@ -55,7 +55,10 @@ namespace REAL.Example
         public void AddJobs(Job[] jobList)
         {
             if(jobList == null || jobList.Length == 0) return;
-            foreach (var job in jobList) AddJob(job);
+            foreach (var job in jobList)
+            {
+                if(job.expFrom == "u3d") AddJob(job);
+            }
         }
         private void AddJob(Job job)
         {

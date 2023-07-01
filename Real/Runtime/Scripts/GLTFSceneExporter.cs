@@ -1116,7 +1116,7 @@ namespace UnityGLTF
 			var materials = meshRenderer ? meshRenderer.sharedMaterials : skinnedMeshRender ? skinnedMeshRender.sharedMaterials : null;
 			var anyMaterialIsNonNull = false;
 			if(materials != null)
-				for (int i = 0; i < materials.Length; i++)
+				for (var i = 0; i < materials.Length; i++)
 					anyMaterialIsNonNull |= materials[i];
 			return (meshFilter && meshRenderer && meshRenderer.enabled) || (skinnedMeshRender && skinnedMeshRender.enabled) && anyMaterialIsNonNull;
 		}
@@ -1162,12 +1162,13 @@ namespace UnityGLTF
             }
             else
             {
-                light = new GLTFLight();
-                //name
-                light.Name = unityLight.name;
-
-                light.type = unityLight.type.ToString().ToLower();
-                light.color = new GLTF.Math.Color(unityLight.color.r, unityLight.color.g, unityLight.color.b, 1);
+                light = new GLTFLight
+                {
+	                //name
+	                Name = unityLight.name,
+	                type = unityLight.type.ToString().ToLower(),
+	                color = new GLTF.Math.Color(unityLight.color.r, unityLight.color.g, unityLight.color.b, 1)
+                };
             }
 
             if (_root.Lights == null)

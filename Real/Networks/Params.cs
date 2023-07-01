@@ -59,9 +59,9 @@ namespace REAL.Networks
 
         public ProdCred(LoginCred login)
         {
-            insID = login.prodCred.insID;
-            appKey = login.userCred.appKey;
-            prodKey = login.prodCred.prodKey;
+            insID = login.insID;
+            appKey = login.appKey;
+            prodKey = login.prodKey;
         }
         public string Dumps()
         {

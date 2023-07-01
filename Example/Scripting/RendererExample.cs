@@ -23,6 +23,7 @@ namespace REAL.Example
         {
             var type = response.type;
             var jobsData = response.data;
+            
             switch (type)
             {
                 case "status":
@@ -34,11 +35,13 @@ namespace REAL.Example
                     break;
             }
         }
-        private void OnOnline()
+        private async void OnOnline()
         {
             canvas.infoPanel.SetStatus("Connected!");
             canvas.loginPanel.SetStatus("Online");
             canvas.ShowRenderUI(true);
+            var userInfo = await ApiRequests.GetAccount(Commons.Renderer.real.login);
+            canvas.loginPanel.SetAccountInfo(userInfo);
         }
         public void OnOffline()
         {
