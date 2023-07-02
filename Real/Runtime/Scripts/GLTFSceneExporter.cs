@@ -19,6 +19,7 @@ using GLTF;
 using GLTF.Schema;
 using GLTF.Schema.KHR_lights_punctual;
 using Newtonsoft.Json;
+using REAL.Geometry;
 using Unity.Profiling;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -1047,25 +1048,28 @@ namespace UnityGLTF
 
 		private CameraId ExportCamera(Camera unityCamera)
 		{
-			GLTFCamera camera = new GLTFCamera();
-			//name
-			camera.Name = unityCamera.name;
+			var camera = new GLTFCamera
+			{
+				//name
+				Name = unityCamera.name
+			};
 
 			//type
-			bool isOrthographic = unityCamera.orthographic;
+			var isOrthographic = unityCamera.orthographic;
 			camera.Type = isOrthographic ? CameraType.orthographic : CameraType.perspective;
-			Matrix4x4 matrix = unityCamera.projectionMatrix;
+			var matrix = unityCamera.projectionMatrix;
 
 			//matrix properties: compute the fields from the projection matrix
 			if (isOrthographic)
 			{
-				CameraOrthographic ortho = new CameraOrthographic();
+				var ortho = new CameraOrthographic
+				{
+					XMag = 1 / matrix[0, 0],
+					YMag = 1 / matrix[1, 1]
+				};
 
-				ortho.XMag = 1 / matrix[0, 0];
-				ortho.YMag = 1 / matrix[1, 1];
-
-				float farClip = (matrix[2, 3] / matrix[2, 2]) - (1 / matrix[2, 2]);
-				float nearClip = farClip + (2 / matrix[2, 2]);
+				var farClip = (matrix[2, 3] / matrix[2, 2]) - (1 / matrix[2, 2]);
+				var nearClip = farClip + (2 / matrix[2, 2]);
 				ortho.ZFar = farClip;
 				ortho.ZNear = nearClip;
 
@@ -1073,23 +1077,23 @@ namespace UnityGLTF
 			}
 			else
 			{
-				CameraPerspective perspective = new CameraPerspective();
-				float fov = 2 * Mathf.Atan(1 / matrix[1, 1]);
-				float aspectRatio = matrix[1, 1] / matrix[0, 0];
+				var perspective = new CameraPerspective();
+				var fov = 2 * Mathf.Atan(1 / matrix[1, 1]);
+				var aspectRatio = matrix[1, 1] / matrix[0, 0];
 				perspective.YFov = fov;
 				perspective.AspectRatio = aspectRatio;
 
 				if (matrix[2, 2] == -1)
 				{
 					//infinite projection matrix
-					float nearClip = matrix[2, 3] * -0.5f;
+					var nearClip = matrix[2, 3] * -0.5f;
 					perspective.ZNear = nearClip;
 				}
 				else
 				{
 					//finite projection matrix
-					float farClip = matrix[2, 3] / (matrix[2, 2] + 1);
-					float nearClip = farClip * (matrix[2, 2] + 1) / (matrix[2, 2] - 1);
+					var farClip = matrix[2, 3] / (matrix[2, 2] + 1);
+					var nearClip = farClip * (matrix[2, 2] + 1) / (matrix[2, 2] - 1);
 					perspective.ZFar = farClip;
 					perspective.ZNear = nearClip;
 				}
@@ -1126,49 +1130,66 @@ namespace UnityGLTF
 	        DeclareExtensionUsage(KHR_lights_punctualExtensionFactory.EXTENSION_NAME, false);
 
             GLTFLight light;
-            const float fact = 10f;
 
-            if (unityLight.type == LightType.Spot)
+            var lType = unityLight.type;
+            var lightColor = unityLight.color;
+            var lightName = unityLight.name;
+            var intensity = unityLight.intensity;
+            var lightType = lType.ToString().ToLower();
+            var color = new GLTF.Math.Color(lightColor.r, lightColor.g, lightColor.b, 1);
+            
+            switch (lType)
             {
-                light = new GLTFSpotLight() { innerConeAngle = unityLight.spotAngle / 2 * Mathf.Deg2Rad * 0.8f, outerConeAngle = unityLight.spotAngle / 2 * Mathf.Deg2Rad };
-                //name
-                light.Name = unityLight.name;
-
-                light.type = unityLight.type.ToString().ToLower();
-                light.color = new GLTF.Math.Color(unityLight.color.r, unityLight.color.g, unityLight.color.b, 1);
-                light.range = unityLight.range;
-                light.intensity = unityLight.intensity;
-            }
-            else if (unityLight.type == LightType.Directional)
-            {
-                light = new GLTFDirectionalLight();
-                //name
-                light.Name = unityLight.name;
-
-                light.type = unityLight.type.ToString().ToLower();
-                light.color = new GLTF.Math.Color(unityLight.color.r, unityLight.color.g, unityLight.color.b, 1);
-                light.intensity = unityLight.intensity;
-            }
-            else if (unityLight.type == LightType.Point)
-            {
-                light = new GLTFPointLight();
-                //name
-                light.Name = unityLight.name;
-
-                light.type = unityLight.type.ToString().ToLower();
-                light.color = new GLTF.Math.Color(unityLight.color.r, unityLight.color.g, unityLight.color.b, 1);
-                light.range = unityLight.range;
-                light.intensity = unityLight.intensity;
-            }
-            else
-            {
-                light = new GLTFLight
-                {
-	                //name
-	                Name = unityLight.name,
-	                type = unityLight.type.ToString().ToLower(),
-	                color = new GLTF.Math.Color(unityLight.color.r, unityLight.color.g, unityLight.color.b, 1)
-                };
+	            case LightType.Spot:
+	            {
+		            var spotAngle = unityLight.spotAngle;
+		            light = new GLTFSpotLight()
+		            {
+			            color= color,
+			            type = lightType,
+			            Name = lightName,
+			            intensity= intensity,
+			            range= unityLight.range,
+			            innerConeAngle = spotAngle / 2 * Mathf.Deg2Rad * 0.8f,
+			            outerConeAngle = spotAngle / 2 * Mathf.Deg2Rad
+		            };
+		            break;
+	            }
+	            case LightType.Directional:
+		            light = new GLTFDirectionalLight()
+		            {
+			            color= color,
+			            type = lightType,
+			            Name = lightName,
+			            intensity= intensity,
+		            };
+		            break;
+	            case LightType.Point:
+		            light = new GLTFPointLight()
+		            {
+			            color= color,
+			            type = lightType,
+			            Name = lightName,
+			            intensity= intensity,
+			            range = unityLight.range,
+		            };
+		            break;
+	            // case LightType.Area:
+		           //  // light = new GLTFLight
+		           //  // {
+			          //  //  color = color,
+			          //  //  Name = RealLight.ParseAreaLight(unityLight),
+			          //  //  type = lightType,
+		           //  // };
+		           //  break;
+	            default:
+		            light = new GLTFLight
+		            {
+			            color = color,
+			            Name = lightName,
+			            type = lightType,
+		            };
+		            break;
             }
 
             if (_root.Lights == null)

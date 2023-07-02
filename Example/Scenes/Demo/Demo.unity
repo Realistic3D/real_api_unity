@@ -344,7 +344,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   login:
     insID: 0
-    appKey: XSEvEJZaepPe6Jr6cg0W
+    appKey: sRKJWEvSFmegLqlcJuqw
     prodKey: 6TOAi5skDgUP584nhe5s
 --- !u!4 &1388398612
 Transform:
@@ -8640,7 +8640,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7659339113499533826
 Transform:
   m_ObjectHideFlags: 0
@@ -8773,7 +8773,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7659339113730192397
 Transform:
   m_ObjectHideFlags: 0
@@ -8820,7 +8820,7 @@ Light:
   m_Type: 3
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 0.5
+  m_Intensity: 10
   m_Range: 32.2242
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -8901,7 +8901,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7659339113805559692
 Transform:
   m_ObjectHideFlags: 0
@@ -9362,7 +9362,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &7659339114147074766
 Light:
   m_ObjectHideFlags: 0

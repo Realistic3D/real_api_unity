@@ -19,7 +19,6 @@ namespace REAL.Example
             var camera = Camera.main;
             var scene = SceneManager.GetActiveScene();
             var login = Commons.Renderer.real.login;
-            
             var realScene = Real.RealScene(scene, camera);
             
             #endregion
