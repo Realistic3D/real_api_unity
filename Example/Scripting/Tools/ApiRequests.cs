@@ -82,7 +82,10 @@ public static class ApiRequests
         {
             await Task.Yield();
         }
-        return www.result == UnityWebRequest.Result.Success;
+
+        var success = www.result == UnityWebRequest.Result.Success;
+        www.Dispose();
+        return success;
     }
     
     public static async Task<Sprite> DownloadImage(string url)
@@ -98,6 +101,7 @@ public static class ApiRequests
         if (www.result != UnityWebRequest.Result.Success) return null;
         var texture = DownloadHandlerTexture.GetContent(www);
         var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+        www.Dispose();
         return sprite;
     }
     
@@ -117,6 +121,7 @@ public static class ApiRequests
         if (www.result != UnityWebRequest.Result.Success) return null;
         var texture = DownloadHandlerTexture.GetContent(www);
         var sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.zero);
+        www.Dispose();
         return sprite;
     }
 }

@@ -1174,14 +1174,6 @@ namespace UnityGLTF
 			            range = unityLight.range,
 		            };
 		            break;
-	            // case LightType.Area:
-		           //  // light = new GLTFLight
-		           //  // {
-			          //  //  color = color,
-			          //  //  Name = RealLight.ParseAreaLight(unityLight),
-			          //  //  type = lightType,
-		           //  // };
-		           //  break;
 	            default:
 		            light = new GLTFLight
 		            {
