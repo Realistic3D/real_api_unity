@@ -57,7 +57,7 @@ namespace REAL.Example
             if(jobList == null || jobList.Length == 0) return;
             foreach (var job in jobList)
             {
-                if(job.expFrom == "u3d") AddJob(job);
+                AddJob(job);
             }
         }
         private void AddJob(Job job)
@@ -78,15 +78,12 @@ namespace REAL.Example
         }
         private bool UpdateJob(Job job)
         {
-            var count = jobs.Count;
-            if (count == 0) return false;
-
+            if (jobs.Count == 0) return false;
             foreach (var jobItem in jobs.Where(jobItem => jobItem.job.jobID == job.jobID))
             {
                 jobItem.SaveStatus(job);
                 return true;
             }
-            
             return false;
         }
 

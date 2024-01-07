@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using REAL.Items;
 using REAL.Networks;
 using UnityEngine;
@@ -42,7 +39,7 @@ namespace REAL.Example
             
             #region Step 2: Apply new job
             
-            var apiResponse = await ApiRequests.PostRequest(login, AskService.NewJob);
+            var apiResponse = await ApiRequests.PostRequest(login, RequestService.New);
             var resData = apiResponse.data; 
             var uri = resData.url;
             
@@ -77,24 +74,23 @@ namespace REAL.Example
             
             #region Step 4: Submit job
 
-            await ApiRequests.PostRequest(login, AskService.Submit, resData.jobID);
+            await ApiRequests.PostRequest(login, RequestService.Render, resData.jobID);
             // Debug.LogError("SIZE = " + Real.SceneSize(realScene));
             #endregion
         }
 
         public static async void DownloadResult(Job job, Action<float> progressCallback)
         {
-            var login = Commons.Renderer.real.login;
-            var apiResponse = await ApiRequests.PostRequest(login, AskService.Result, job.jobID);
-            var data = apiResponse.data;
-            
-            if (data == null || !data.url.StartsWith("http"))
+            // var login = Commons.Renderer.real.login;
+            // var apiResponse = await ApiRequests.PostRequest(login, RequestService.Result, job.jobID);
+            // var data = apiResponse.data;
+            var url = job.result;
+            if (!url.StartsWith("http"))
             {
                 Commons.Renderer.canvas.loginPanel.SetStatus("Failed to apply for result!");
                 return;
             }
 
-            var url = data.url;
             var sprite = await ApiRequests.DownloadImageProgress(url, progressCallback);
             Commons.Renderer.canvas.jobPanel.DisplayResult(sprite);
         }

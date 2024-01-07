@@ -26,7 +26,7 @@ namespace REAL.Example
             
             switch (type)
             {
-                case "status":
+                case "jobs":
                     canvas.jobPanel.AddJobs(jobsData);
                     break;
                 case "auth_success":
@@ -40,8 +40,8 @@ namespace REAL.Example
             canvas.infoPanel.SetStatus("Connected!");
             canvas.loginPanel.SetStatus("Online");
             canvas.ShowRenderUI(true);
-            var userInfo = await ApiRequests.GetAccount(Commons.Renderer.real.login);
-            canvas.loginPanel.SetAccountInfo(userInfo);
+            var prodInfo = await ApiRequests.LoginProduct(Commons.Renderer.real.login);
+            canvas.loginPanel.SetAccountInfo(prodInfo);
         }
         public void OnOffline()
         {

@@ -45,13 +45,16 @@ namespace REAL.Example
 
         #endregion
      
-     
-        public static async void Connect()
+        /// <summary>
+        /// Connect to socket server
+        /// </summary>
+        /// <param name="onlyUnityJobs">true means jobs created by using Unity will be received only</param>
+        public static async void Connect(bool onlyUnityJobs = true)
         {
             try
             {
                 if (_ws is { State: WebSocketState.Connecting or WebSocketState.Open }) return;
-                _url = GetUri(Commons.Renderer.real.login);
+                _url = GetUri(Commons.Renderer.real.login, onlyUnityJobs);
 
                 _ws = new ClientWebSocket();
                 _ct = new CancellationToken();
@@ -113,14 +116,16 @@ namespace REAL.Example
             Commons.Renderer.OnOffline();
         }
 
-        private static string GetUri(LoginCred login)
+        private static string GetUri(LoginCred login, bool onlyUnityJobs)
         {
             // var ul = login.userCred;
             // var pl = login.prodCred;
             var insID = login.insID;
             var appKey = login.appKey;
             var prodKey = login.prodKey;
-            return $"wss://{(RealNetwork.Domain)}/login?app_key={appKey}&prod_key={prodKey}&ins_id={insID}&exp_from=u3d";
+            var uri = $"wss://{(RealNetwork.Domain)}/realAPI?app_key={appKey}&prod_key={prodKey}&ins_id={insID}";
+            if (onlyUnityJobs) uri += "&exp_from=u3d";
+            return uri;
         }
     }
 

@@ -11,7 +11,7 @@ namespace REAL.Example
 {
     public static class ApiClient
     {
-        public static IEnumerator PostRequest(RendererExample render, AskService ask)
+        public static IEnumerator PostRequest(RendererExample render, RequestService ask)
         {
             var param = new Params(render.real.login, ask);
             var json = param.Dumps();
@@ -54,7 +54,7 @@ namespace REAL.Example
             }
         }
         
-        public static IEnumerator PostRequestOld(LoginCred login, AskService ask)
+        public static IEnumerator PostRequestOld(LoginCred login, RequestService ask)
         {
             var param = new Params(login, ask);
             var json = param.Dumps();

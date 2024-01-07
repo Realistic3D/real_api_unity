@@ -1,24 +1,22 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using REAL.Example;
-using REAL.Networks;
 using REAL.Tools;
+using System.Text;
 using UnityEngine;
+using REAL.Networks;
+using System.Threading.Tasks;
 using UnityEngine.Networking;
+using RenderParams = REAL.Networks.RenderParams;
 
 public static class ApiRequests
 {
-    public static async Task<AccountResponse> GetAccount(LoginCred login)
+    public static async Task<AccountResponse> LoginProduct(LoginCred login)
     {
         const string domain = RealNetwork.Domain;
         var insID = login.insID;
         var appKey = login.appKey;
         var prodKey = login.prodKey;
         
-        var uri = $"https://{domain}/rapi/get_account?insID={insID}&appKey={appKey}&prodKey={prodKey}";
+        var uri = $"https://{domain}/rapi/login?insID={insID}&appKey={appKey}&prodKey={prodKey}";
         
         var www = UnityWebRequest.Get(uri);
         www.downloadHandler = new DownloadHandlerBuffer();
@@ -42,9 +40,9 @@ public static class ApiRequests
         return null;
     }
     
-    public static async Task<ApiResponse> PostRequest(LoginCred login, AskService ask, string jobID = null)
+    public static async Task<ApiResponse> PostRequest(LoginCred login, RequestService ask, string jobID = null, RenderParams render = null)
     {
-        var param = new Params(login, ask, jobID);
+        var param = new Params(login, ask, jobID, render);
         var json = param.Dumps();
 
         var data = Encoding.UTF8.GetBytes(json);
@@ -63,7 +61,6 @@ public static class ApiRequests
         if (www.result == UnityWebRequest.Result.Success)
         {
             var response = www.downloadHandler.text;
-            
             return JsonUtility.FromJson<ApiResponse>(response);
         }
         Debug.LogError("Error: " + www.error);

@@ -41,15 +41,15 @@ namespace REAL.Example
             job = jobInfo;
             var jobStatus = job.status;
             status.text = jobStatus.ToUpper();
-            switch (jobStatus)
+            if (!jobInfo.finished) return;
+            if (jobInfo.result.StartsWith("http"))
             {
-                case "COMPLETED":
-                    thumb.sprite = successIcon;
-                    _thumbButton.interactable = true;
-                    break;
-                case "FAILED":
-                    thumb.sprite = failedIcon;
-                    break;
+                thumb.sprite = successIcon;
+                _thumbButton.interactable = true;
+            }
+            else
+            {
+                thumb.sprite = failedIcon;
             }
         }
 

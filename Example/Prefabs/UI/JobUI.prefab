@@ -94,17 +94,16 @@ MonoBehaviour:
   thumb: {fileID: 9152400532371163945}
   status: {fileID: 9152400532497021019}
   successIcon: {fileID: 21300000, guid: 1bb5078da06a6f94c989dc027e883ddc, type: 3}
-  failedIcon: {fileID: 21300000, guid: 06b6627e6a6fb004dbac6c4169cbd214, type: 3}
+  failedIcon: {fileID: 21300000, guid: 08df8645e483b8b43ade6f31a1fafe27, type: 3}
   job:
-    used: 0
+    result: 
     charges: 0
-    samples: 0
+    finished: 0
     jobID: 
     status: 
     outExt: 
-    jobExt: 
     expFrom: 
-    chargeType: 
+    elapsedTime: 0
     renderTime: 
 --- !u!1 &9152400532371163943
 GameObject:
