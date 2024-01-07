@@ -1,4 +1,5 @@
 using System;
+using Newtonsoft.Json;
 using REAL.Items;
 
 namespace REAL.Networks
@@ -10,6 +11,11 @@ namespace REAL.Networks
         public string msg;
         public string type;
         public Job[] data;
+        
+        public string Dumps()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 
     [Serializable]
@@ -17,6 +23,11 @@ namespace REAL.Networks
     {
         public string msg;
         public ApiResponseData data;
+        
+        public string Dumps()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
     
     [Serializable]
@@ -25,6 +36,13 @@ namespace REAL.Networks
         public string url;
         public string jobID;
         public string status;
+        public bool finished;
+        public string expFrom;
+        
+        public string Dumps()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
     
     [Serializable]

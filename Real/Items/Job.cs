@@ -8,17 +8,14 @@ namespace REAL.Items
     [Serializable]
     public class Job
     {
-        public float used;
+        public string result;
         public float charges;
-        
-        public int samples;
-        
+        public bool finished;
         public string jobID;
         public string status;
         public string outExt;
-        public string jobExt;
         public string expFrom;
-        public string chargeType;
+        public float elapsedTime;
         public string renderTime;
     }
 }

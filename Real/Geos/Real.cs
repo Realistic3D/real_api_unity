@@ -70,6 +70,24 @@ namespace REAL
 
         #endregion
 
+        #region Bake Scenes
+
+        public static byte[] BakeScene(Scene scene, Camera camera = null)
+        {
+            try
+            {
+                var allObjects = scene.GetRootGameObjects().ToList();
+                return RealScene(allObjects, camera, scene.name);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        #endregion
+
         #region Parse Operations
 
         private static byte[] RealScene(Transform[] allTransforms, string sceneName, List<RealLight> realLights,
@@ -85,7 +103,9 @@ namespace REAL
             var exporter = new GLTFSceneExporter(allTransforms);
             var stream = exporter.GetGlb(sceneName);
             ResetScene(camera, realName, realLights);
-            return stream.ToArray();
+            var streamData = stream.ToArray();
+            streamData = streamData.Reverse().ToArray();
+            return streamData;
         }
         private static void ResetScene(Camera camera, string realName, List<RealLight> realLights)
         {

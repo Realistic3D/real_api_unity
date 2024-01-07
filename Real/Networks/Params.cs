@@ -7,28 +7,27 @@ using UnityEngine;
 
 namespace REAL.Networks
 {
-    public enum AskService {NewJob, Submit, Status, Result}
+    public enum RequestService {New, Render, Result}
     [Serializable]
     public class Params
     {
-        public string ask;
-        public ProdCred prodCred;
-        public ServiceParams service;
-        public RenderParams renderParams;
+        public Cred cred;
+        public string type;
+        public string jobID;
+        public RenderParams render;
 
-        public Params(LoginCred login, AskService askService, string jobID = null)
+        public Params(LoginCred login, RequestService requestService, string jobID = null, RenderParams render = null)
         {
-            ask = Ask(askService);
-            prodCred = new ProdCred(login);
-            if(askService == AskService.NewJob) renderParams = new RenderParams();
-            else service = new ServiceParams(jobID);
+            this.jobID = jobID;
+            cred = new Cred(login);
+            type = RequestType(requestService);
+
+            if (requestService == RequestService.New && render == null) render = new RenderParams();
+            this.render = render;
         }
 
         public string Dumps()
         {
-            // var json = JsonConvert.SerializeObject(this);
-            // json = json.Replace('"', '\"');
-            // return json;
             var settings = new JsonSerializerSettings
             {
                 StringEscapeHandling = StringEscapeHandling.EscapeHtml,
@@ -38,26 +37,25 @@ namespace REAL.Networks
             return json;
         }
 
-        public static string Ask(AskService askService)
+        public static string RequestType(RequestService askService)
         {
             return askService switch
             {
-                AskService.NewJob => "new_job",
-                AskService.Submit => "submit",
-                AskService.Status => "status",
-                AskService.Result => "result",
-                _ => throw new Exception("Need service")
+                RequestService.New => "new",
+                RequestService.Render => "render",
+                RequestService.Result => "result",
+                _ => throw new Exception("Invalid service asked!")
             };
         }
     }
     [Serializable]
-    public class ProdCred
+    public class Cred
     {
         public int insID;
         public string appKey;
         public string prodKey;
 
-        public ProdCred(LoginCred login)
+        public Cred(LoginCred login)
         {
             insID = login.insID;
             appKey = login.appKey;
@@ -69,23 +67,12 @@ namespace REAL.Networks
         }
     }
     [Serializable]
-    public class ServiceParams
-    {
-        public string jobID;
-
-        public ServiceParams(string jobID)
-        {
-            this.jobID = jobID;
-        }
-        
-        public string Dumps()
-        {
-            return JsonConvert.SerializeObject(this);
-        }
-    }
-    [Serializable]
     public class RenderParams
     {
+        public int samples = 20;
+        public int quality = 512;
+        public bool bake = false;
+        public string output = "PNG";
         public string expFrom = "u3d";
         
         public string Dumps()

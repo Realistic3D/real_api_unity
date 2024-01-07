@@ -61,7 +61,11 @@ namespace REAL.Component
             var scale = lTrans.localScale;
             
             var posName = $"position|{position.x}_{position.y}_{position.z}";
-            var rotName = $"quaternion|{quaternion.x}_{quaternion.y}_{quaternion.z}_{quaternion.w}";
+            var rotName = $"quaternion|" +
+                          $"{ParsedF(quaternion.x)}_" +
+                          $"{ParsedF(quaternion.y)}_" +
+                          $"{ParsedF(quaternion.z)}_" +
+                          $"{ParsedF(quaternion.w)}";
             var scaleName = $"scale|{scale.x}_{scale.y}_{scale.z}";
             
             realLight = new GameObject(RealName);
@@ -87,6 +91,11 @@ namespace REAL.Component
             gameObject.SetActive(false);
         }
 
+        private float ParsedF(float value)
+        {
+            return (float) Math.Round(value, 5);
+        }
+        
         public void Reset()
         {
             if(realLight) Destroy(realLight);
